@@ -21,7 +21,11 @@ This directory is dedicated to maintaining examples and practice files for AWS C
 
 ### Custom Tags for VSCode
 
-To enhance the understanding of AWS CloudFormation templates in VSCode, you need to add custom tags to the `settings.json` file in the `.vscode` folder. This will enable VSCode to recognize and properly handle the custom tags used in CloudFormation templates.
+To enhance the understanding of AWS CloudFormation templates in VSCode, you need to add custom tags to the `settings.json` file in the `.vscode` folder. This will enable VSCode to recognize and properly handle the custom tags used in CloudFormation templates, ensuring that your templates are validated correctly and that you get proper autocompletion and error-checking features.
+
+#### Why Use Custom Tags
+
+Custom tags in CloudFormation templates allow you to use specialized intrinsic functions and other unique constructs that are specific to AWS CloudFormation. By configuring VSCode to recognize these custom tags, you improve the readability and maintainability of your templates. This setup helps VSCode parse the templates accurately, providing you with better syntax highlighting, validation, and error detection, thus enhancing your overall development experience.
 
 #### Steps to Add Custom Tags
 
