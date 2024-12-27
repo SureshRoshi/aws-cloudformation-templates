@@ -1,0 +1,36 @@
+# Ignore all files ending with .log or .tmp
+*.log
+*.tmp
+
+# Ignore IDE/editor specific files
+.vscode/
+.idea/
+*.swp
+
+# Ignore node_modules for any Node.js projects (if applicable)
+node_modules/
+
+# Ignore environment variable files
+.env
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore compiled files
+*.class
+*.pyc
+
+# Ignore AWS specific files
+.aws-sam/
+
+# Ignore your deployment scripts if you don't want to version them
+# deploy.sh
+# delete-stack.sh
+
+# Ignore any other files/directories you don't want to track
+# Uncomment the below line if you have a build directory
+# build/
+
+# Ignore README if it's not meant for versioning
+# Uncomment the below line if you don't want to version README.md
+# README.md
