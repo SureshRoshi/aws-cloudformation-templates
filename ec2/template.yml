@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Template to create an EC2 instance in the specified VPC, subnet, and with specified security groups.
+
+Parameters:
+  VpcId:
+    Description: The ID of the VPC
+    Type: String
+    Default: vpc-0596cd93592fd602a
+  SubnetId:
+    Description: The ID of the subnet
+    Type: String
+    Default: subnet-0be274a85b376e97a
+  SecurityGroupIds:
+    Description: The IDs of the security groups
+    Type: CommaDelimitedList
+    Default: sg-000288393b2049f9a,sg-0dc27f5c769f32c61
+  KeyName:
+    Description: The key pair name for the instance
+    Type: String
+    Default: QuantumKeyPair
+  InstanceType:
+    Description: The EC2 instance type
+    Type: String
+    Default: t2.micro
+  ImageId:
+    Description: The ID of the AMI
+    Type: String
+    Default: ami-005fc0f236362e99f
+
+Resources:
+  MyEC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref ImageId
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          SubnetId: !Ref SubnetId
+          GroupSet: !Ref SecurityGroupIds
+      KeyName: !Ref KeyName
+      Tags:
+        - Key: "Name"
+          Value: "MyEC2Instance"
+
+Outputs:
+  InstanceId:
+    Description: "Instance ID of the newly created EC2 instance"
+    Value: !Ref MyEC2Instance
+  # VpcId:
+  #   Description: "VPC ID of the newly created EC2 instance"
+  #   Value: !Ref VpcId
+  # SubnetId:
+  #   Description: "Subnet ID of the newly created EC2 instance"
+  #   Value: !Ref SubnetId
+  # SecurityGroupIds:
+  #   Description: "Security Group IDs of the newly created EC2 instance"
+  #   Value: !Ref SecurityGroupIds
+  # KeyName:
+  #   Description: "Key Pair Name of the newly created EC2 instance"
+  #   Value: !Ref KeyName
+  # InstanceType:
+  #   Description: "Instance Type of the newly created EC2 instance"
+  #   Value: !Ref InstanceType
+  # ImageId:
+  #   Description: "AMI ID of the newly created EC2 instance"
+  #   Value: !Ref ImageId
