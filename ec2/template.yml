@@ -47,21 +47,9 @@ Outputs:
   InstanceId:
     Description: "Instance ID of the newly created EC2 instance"
     Value: !Ref MyEC2Instance
-  # VpcId:
-  #   Description: "VPC ID of the newly created EC2 instance"
-  #   Value: !Ref VpcId
-  # SubnetId:
-  #   Description: "Subnet ID of the newly created EC2 instance"
-  #   Value: !Ref SubnetId
-  # SecurityGroupIds:
-  #   Description: "Security Group IDs of the newly created EC2 instance"
-  #   Value: !Ref SecurityGroupIds
-  # KeyName:
-  #   Description: "Key Pair Name of the newly created EC2 instance"
-  #   Value: !Ref KeyName
-  # InstanceType:
-  #   Description: "Instance Type of the newly created EC2 instance"
-  #   Value: !Ref InstanceType
-  # ImageId:
-  #   Description: "AMI ID of the newly created EC2 instance"
-  #   Value: !Ref ImageId
+  PublicDnsName:
+    Description: "Public DNS name of the newly created EC2 instance"
+    Value: !GetAtt MyEC2Instance.PublicDnsName
+  SSHCommand:
+    Description: "SSH command to connect to the EC2 instance"
+    Value: !Sub 'ssh -i "QuantumKeyPair.pem" ubuntu@${MyEC2Instance.PublicDnsName}'
