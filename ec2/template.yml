@@ -52,4 +52,4 @@ Outputs:
     Value: !GetAtt MyEC2Instance.PublicDnsName
   SSHCommand:
     Description: "SSH command to connect to the EC2 instance"
-    Value: !Sub 'ssh -i "QuantumKeyPair.pem" ubuntu@${MyEC2Instance.PublicDnsName}'
+    Value: !Sub 'ssh -i "${KeyName}.pem" ubuntu@${MyEC2Instance.PublicDnsName}'
