@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Template to create an S3 bucket
+
+Parameters:
+  BucketName:
+    Description: The name of the S3 bucket
+    Type: String
+    Default: unique-bucket-name-123456
+  AccessControl:
+    Description: The access control settings for the S3 bucket
+    Type: String
+    Default: Private
+    AllowedValues:
+      - Private
+      - PublicRead
+      - PublicReadWrite
+      - AuthenticatedRead
+  VersioningConfiguration:
+    Description: Enable versioning for the S3 bucket
+    Type: String
+    Default: Suspended
+    AllowedValues:
+      - Enabled
+      - Suspended
+
+Resources:
+  MyS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Ref BucketName
+      AccessControl: !Ref AccessControl
+      VersioningConfiguration:
+        Status: !Ref VersioningConfiguration
+
+Outputs:
+  BucketName:
+    Description: "Name of the created S3 bucket"
+    Value: !Ref MyS3Bucket
