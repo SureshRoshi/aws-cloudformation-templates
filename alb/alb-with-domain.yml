@@ -1,0 +1,140 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Template to create an ALB, target group, associate it with an existing EC2 instance, and set up HTTPS with ACM.
+
+Parameters:
+  VpcId:
+    Description: The ID of the VPC
+    Type: String
+    Default: vpc-0596cd93592fd602a
+  Subnets:
+    Description: List of subnet IDs for the ALB
+    Type: CommaDelimitedList
+    Default: subnet-0be274a85b376e97a,subnet-04f246f04b8aa3607
+  SecurityGroupIds:
+    Description: The IDs of the security groups
+    Type: CommaDelimitedList
+    Default: sg-000288393b2049f9a,sg-0dc27f5c769f32c61
+  LoadBalancerType:
+    Description: The type of load balancer
+    Type: String
+    Default: application
+  EC2InstanceId:
+    Description: The ID of the existing EC2 instance
+    Type: String
+    Default: i-xxxxxxxxxxxxxxxxx
+  LoadBalancerName:
+    Description: The name of the load balancer
+    Type: String
+    Default: my-load-balancer
+  TargetGroupName:
+    Description: The name of the target group
+    Type: String
+    Default: my-target-group
+  CertificateArn:
+    Description: The ARN of the SSL/TLS certificate for HTTPS
+    Type: String
+    Default: arn:aws:acm:region:account-id:certificate/certificate-id
+  HTTPProtocol:
+    Description: The protocol for HTTP
+    Type: String
+    Default: HTTP
+  HTTPSProtocol:
+    Description: The protocol for HTTPS
+    Type: String
+    Default: HTTPS
+  HTTPPort:
+    Description: The port for HTTP
+    Type: String
+    Default: "80"
+  HTTPSPort:
+    Description: The port for HTTPS
+    Type: String
+    Default: "443"
+  DomainName:
+    Description: The domain name for the redirect
+    Type: String
+    Default: "www.domain.com"
+
+Resources:
+  MyLoadBalancer:
+    Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
+    Properties:
+      Name: !Ref LoadBalancerName
+      Subnets: !Ref Subnets
+      Scheme: internet-facing
+      LoadBalancerAttributes:
+        - Key: idle_timeout.timeout_seconds
+          Value: "60"
+      SecurityGroups:
+        - !Ref SecurityGroupIds
+      Type: !Ref LoadBalancerType
+      Tags:
+        - Key: Name
+          Value: !Ref LoadBalancerName
+
+  MyTargetGroup:
+    Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
+    Properties:
+      Name: !Ref TargetGroupName
+      Port: !Ref HTTPPort
+      Protocol: HTTP
+      VpcId: !Ref VpcId
+      TargetType: instance
+      Targets:
+        - Id: !Ref EC2InstanceId
+      HealthCheckEnabled: true
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPath: /
+      HealthCheckPort: !Ref HTTPPort
+      HealthCheckProtocol: !Ref HTTPProtocol
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 5
+      UnhealthyThresholdCount: 2
+
+  HTTPListener:
+    Type: "AWS::ElasticLoadBalancingV2::Listener"
+    Properties:
+      DefaultActions:
+        - Type: redirect
+          RedirectConfig:
+            Protocol: !Ref HTTPSProtocol
+            Port: !Ref HTTPSPort
+            Host: !Ref DomainName
+            StatusCode: HTTP_301
+      LoadBalancerArn: !Ref MyLoadBalancer
+      Port: !Ref HTTPPort
+      Protocol: !Ref HTTPProtocol
+
+  HTTPSListener:
+    Type: "AWS::ElasticLoadBalancingV2::Listener"
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref MyTargetGroup
+        - Type: redirect
+          RedirectConfig:
+            Host: !Ref DomainName
+            Path: "/#"
+            Port: !Ref HTTPSPort
+            Protocol: !Ref HTTPSProtocol
+            Query: "#"
+            StatusCode: HTTP_301
+      LoadBalancerArn: !Ref MyLoadBalancer
+      Port: !Ref HTTPSPort
+      Protocol: !Ref HTTPSProtocol
+      Certificates:
+        - CertificateArn: !Ref CertificateArn
+
+Outputs:
+  LoadBalancerDNSName:
+    Description: "DNS name of the load balancer"
+    Value: !GetAtt MyLoadBalancer.DNSName
+  TargetGroupArn:
+    Description: "ARN of the created target group"
+    Value: !Ref MyTargetGroup
+  HTTPListenerArn:
+    Description: "ARN of the created HTTP listener"
+    Value: !Ref HTTPListener
+  HTTPSListenerArn:
+    Description: "ARN of the created HTTPS listener"
+    Value: !Ref HTTPSListener
