@@ -1,0 +1,55 @@
+---
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0f9de6e2d2f067fca
+      InstanceType: t2.medium
+      KeyName: QuantumKeyPair
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            Encrypted: false
+            DeleteOnTermination: true
+            SnapshotId: snap-0706476dde26d8e82
+            VolumeSize: 10
+            VolumeType: gp2
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeleteOnTermination: true
+          DeviceIndex: 0
+          GroupSet:
+            - sg-0dc27f5c769f32c61
+            - sg-000288393b2049f9a
+          SubnetId: subnet-0be274a85b376e97a
+      CreditSpecification:
+        CPUCredits: standard
+      MetadataOptions:
+        HttpEndpoint: enabled
+        HttpPutResponseHopLimit: 2
+        HttpTokens: required
+      PrivateDnsNameOptions:
+        HostnameType: ip-name
+        EnableResourceNameDnsARecord: false
+        EnableResourceNameDnsAAAARecord: false
+      Tags:
+        - Key: Name
+          Value: aws-devops-node
+
+    # Step 1: Create an EC2 instance with the specified properties
+    # Step 2: Attach an EBS volume with the specified snapshot and volume configuration
+    # Step 3: Associate the instance with the specified security groups and subnet
+    # Step 4: Configure CPU credit specification for the instance
+    # Step 5: Enable metadata options for the instance
+    # Step 6: Configure private DNS name options for the instance
+    # Step 7: Tag the instance with the specified Name tag
+# Reasoning:
+# 1) Libraries and their versions used: AWS::EC2::Instance (AWS CloudFormation Resource)
+# 2) AWS resources impacted: AWS::EC2::Instance, AWS::EC2::EBSVolume, AWS::EC2::NetworkInterface, AWS::EC2::SecurityGroup, AWS::EC2::Subnet
+# 3) AWS actions performed: Create an EC2 instance, attach an EBS volume, associate security groups and subnet,
+# configure CPU credit specification, enable metadata options, configure private DNS name options, and tag the instance.
+# 4) The generated YAML creates an EC2 instance with the specified properties,
+# including image ID, instance type, key pair, EBS volume configuration, network interfaces, CPU credit specification,
+# metadata options, private DNS name options, and a Name tag. The EBS volume is created from a specified snapshot and
+# attached to the instance. The instance is associated with the specified security groups and subnet.
+# The CPU credit specification, metadata options, and private DNS name options are configured as per the provided CLI commands.

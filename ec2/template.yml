@@ -2,6 +2,10 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Template to create an EC2 instance in the specified VPC, subnet, and with specified security groups.
 
 Parameters:
+  InstanceName:
+    Description: The name of the Instance
+    Type: String
+    Default: aws-devops-node
   VpcId:
     Description: The ID of the VPC
     Type: String
@@ -28,7 +32,7 @@ Parameters:
     Default: ami-005fc0f236362e99f
 
 Resources:
-  MyEC2Instance:
+  EC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
       InstanceType: !Ref InstanceType
@@ -41,15 +45,15 @@ Resources:
       KeyName: !Ref KeyName
       Tags:
         - Key: "Name"
-          Value: "MyEC2Instance"
+          Value: !Ref InstanceName
 
 Outputs:
   InstanceId:
     Description: "Instance ID of the newly created EC2 instance"
-    Value: !Ref MyEC2Instance
+    Value: !Ref EC2Instance
   PublicDnsName:
     Description: "Public DNS name of the newly created EC2 instance"
-    Value: !GetAtt MyEC2Instance.PublicDnsName
+    Value: !GetAtt EC2Instance.PublicDnsName
   SSHCommand:
     Description: "SSH command to connect to the EC2 instance"
-    Value: !Sub 'ssh -i "${KeyName}.pem" ubuntu@${MyEC2Instance.PublicDnsName}'
+    Value: !Sub 'ssh -i "${KeyName}.pem" ubuntu@${EC2Instance.PublicDnsName}'

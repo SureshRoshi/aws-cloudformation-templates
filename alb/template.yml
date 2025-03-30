@@ -40,7 +40,7 @@ Parameters:
     Default: "80"
 
 Resources:
-  MyLoadBalancer:
+  LoadBalancer:
     Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
     Properties:
       Name: !Ref LoadBalancerName
@@ -56,7 +56,7 @@ Resources:
         - Key: Name
           Value: !Ref LoadBalancerName
 
-  MyTargetGroup:
+  TargetGroup:
     Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
     Properties:
       Name: !Ref TargetGroupName
@@ -80,18 +80,18 @@ Resources:
     Properties:
       DefaultActions:
         - Type: forward
-          TargetGroupArn: !Ref MyTargetGroup
-      LoadBalancerArn: !Ref MyLoadBalancer
+          TargetGroupArn: !Ref TargetGroup
+      LoadBalancerArn: !Ref LoadBalancer
       Port: !Ref HTTPPort
       Protocol: !Ref HTTPProtocol
 
 Outputs:
   LoadBalancerDNSName:
     Description: "DNS name of the load balancer"
-    Value: !GetAtt MyLoadBalancer.DNSName
+    Value: !GetAtt LoadBalancer.DNSName
   TargetGroupArn:
     Description: "ARN of the created target group"
-    Value: !Ref MyTargetGroup
+    Value: !Ref TargetGroup
   HTTPListenerArn:
     Description: "ARN of the created HTTP listener"
     Value: !Ref HTTPListener

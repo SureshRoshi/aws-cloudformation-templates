@@ -24,7 +24,7 @@ Parameters:
       - Suspended
 
 Resources:
-  MyS3Bucket:
+  S3Bucket:
     Type: "AWS::S3::Bucket"
     Properties:
       BucketName: !Ref BucketName
@@ -35,4 +35,4 @@ Resources:
 Outputs:
   BucketName:
     Description: "Name of the created S3 bucket"
-    Value: !Ref MyS3Bucket
+    Value: !Ref S3Bucket
